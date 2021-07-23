@@ -12,6 +12,7 @@ User.init(
   {
     username: DataTypes.STRING,
     passwordHash: DataTypes.STRING,
+    salt:DataTypes.STRING,
   },
   {
     sequelize,
@@ -19,6 +20,6 @@ User.init(
   }
 );
 
-module.exports = User;
+module.exports = {User, sequelize}
 
 sequelize.sync()

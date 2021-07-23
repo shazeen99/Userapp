@@ -1,22 +1,34 @@
-const bcrypt = require('bcrypt')
-const User = require("./db")
+const {User} = require("./db")
 const express = require("express")
+const crypto = require("crypto");
 
 const app = express()
 
+
+
+
+function generateSalt() {
+    return crypto.randomBytes(16).toString("hex");
+}
+function getPasswordHashAndSalt(password) {
+    const salt = generateSalt();
+    const passwordHash = hashPassword(password, salt);
+    return { passwordHash, salt };
+}
+function hashPassword(password, salt) {
+    return crypto
+        .pbkdf2Sync(password, salt, 1000, 64, "sha256")
+        .toString("base64");
+}
+function passwordIsCorrect(password, salt, passwordHash) {
+    hashPassword(password, salt) === passwordHash;
+}
+
 app.post("/users", async (req, res) => {
     const {username, password} = req.body
-    const passwordHash = await bcrypt.hash(password, 10);
-    console.log(username, password, hash)
+    getPasswordHashAndSalt(password)
+    await User.create({username, passwordHash, salt})
     res.sendStatus(201);
   });
-//bcrypt.hash('password101', 10).then(console.log)
+module.exports = app
 
-
-//checking hash
-// bcrypt
-//     .compare(
-//         "password101",
-//         "$2b$10$AQXoVkfzAovJ9RHTtmd6N.Yegy3V9ALTlYDcCM76HxBqq044q6xLK"
-//     )
-//     .then(console.log);

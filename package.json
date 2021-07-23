@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/shazeen99/Userapp/issues"
   },
-  "homepage": "https://github.com/shazeen99/Userapp#readme"
+  "homepage": "https://github.com/shazeen99/Userapp#readme",
+  "dependencies": {
+    "sqlite3": "^5.0.2"
+  }
 }
